@@ -1,13 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Urbanist:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 270 50% 98%;
+    --foreground: 270 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 270 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 270 10% 10%;
+
+    --primary: 270 60% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 270 30% 90%;
+    --secondary-foreground: 270 10% 10%;
+
+    --muted: 270 20% 90%;
+    --muted-foreground: 270 10% 40%;
+
+    --accent: 270 30% 90%;
+    --accent-foreground: 270 10% 10%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 270 20% 88%;
+    --input: 270 20% 88%;
+    --ring: 270 60% 50%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
   * {
-    @apply border-border;
+    @apply border-border antialiased;
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
+}
+
+.font-display {
+  font-family: 'Urbanist', sans-serif;
+}
+
+.font-sans {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Smooth transitions */
+.transition-all {
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Button hover animations */
+.button-hover {
+  @apply relative overflow-hidden transition-all duration-300;
+}
+
+.button-hover::after {
+  content: '';
+  @apply absolute inset-0 bg-white/20 scale-x-0 transition-transform duration-300 origin-left;
+}
+
+.button-hover:hover::after {
+  @apply scale-x-100;
 }
