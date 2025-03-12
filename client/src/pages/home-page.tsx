@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { Lesson, Progress as ProgressType } from "@shared/schema";
+import { motion } from "framer-motion";
+import { Clock, MessageSquare } from "lucide-react";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -25,10 +27,19 @@ export default function HomePage() {
     <div className="min-h-screen bg-background">
       <header className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Linguify</h1>
+          <h1 className="text-2xl font-bold font-display bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            Linguify
+          </h1>
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock className="h-4 w-4" />
+              <span>Time spent: {user?.timeSpent || 0} min</span>
+            </div>
             <Link href="/practice">
-              <Button variant="outline">Practice Chat</Button>
+              <Button variant="outline" className="gap-2">
+                <MessageSquare className="h-4 w-4" />
+                Practice Chat
+              </Button>
             </Link>
             <Button variant="ghost" onClick={() => logoutMutation.mutate()}>
               Logout
@@ -40,10 +51,20 @@ export default function HomePage() {
       <main className="container mx-auto px-4 py-8">
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Your Progress</CardTitle>
+            <CardTitle className="font-display">Your Progress</CardTitle>
           </CardHeader>
           <CardContent>
-            <Progress value={progressPercentage} className="mb-2" />
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPercentage}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            >
+              <Progress 
+                value={progressPercentage} 
+                className="mb-2 bg-green-100" 
+                indicatorClassName="bg-green-500 transition-all duration-500"
+              />
+            </motion.div>
             <p className="text-sm text-muted-foreground">
               {completedLessons} of {totalLessons} lessons completed
             </p>
@@ -52,15 +73,22 @@ export default function HomePage() {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {lessons?.map((lesson) => (
-            <Card key={lesson.id}>
-              <CardHeader>
-                <CardTitle>{lesson.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">{lesson.content}</p>
-                <Button className="w-full">Start Lesson</Button>
-              </CardContent>
-            </Card>
+            <motion.div
+              key={lesson.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="font-display">{lesson.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">{lesson.content}</p>
+                  <Button className="w-full">Start Lesson</Button>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </main>
