@@ -18,24 +18,19 @@ export function NavBar() {
               <img 
                 src="/linguify-logo.png" 
                 alt="Linguify Logo" 
-                className="h-8 w-auto"
+                className="h-12 w-auto"
               />
             </div>
           </Link>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <div className="flex items-center space-x-4">
+            <Link href="/about">
               <Button variant="ghost" className="space-x-2 transition-all duration-300 hover:bg-purple-800 text-white">
                 <Info className="w-4 h-4" />
                 <span>About Us</span>
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Our Mission</DropdownMenuItem>
-              <DropdownMenuItem>How It Works</DropdownMenuItem>
-              <DropdownMenuItem>Contact</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
