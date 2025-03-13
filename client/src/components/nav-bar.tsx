@@ -11,14 +11,14 @@ import { Info } from "lucide-react";
 export function NavBar() {
   return (
     <nav className="bg-purple-900 shadow-lg border-b border-purple-800 transition-all duration-300">
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-2">
         <div className="flex justify-between items-center">
           <Link href="/">
             <div className="flex items-center space-x-2 cursor-pointer">
               <img 
                 src="/linguify-logo.png" 
                 alt="Linguify Logo" 
-                className="h-8 w-auto"
+                className="h-12 w-auto transition-transform duration-300 hover:scale-105"
               />
             </div>
           </Link>
