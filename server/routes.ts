@@ -26,25 +26,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(progress);
   });
 
+  // Update user progress directly without creating a Progress document
   app.post("/api/progress", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
 
-    const progress = await storage.updateProgress({
-      userId: req.user!.id,
-      lessonId: req.body.lessonId,
-      completed: req.body.completed,
-      timeSpent: req.body.timeSpent || 0,
-    });
-    res.json(progress);
-  });
-
-  // Time tracking route
-  app.post("/api/time-spent", async (req, res) => {
-    if (!req.isAuthenticated()) return res.sendStatus(401);
-
-    const user = await storage.updateUserTimeSpent(
+    const user = await storage.updateUserProgress(
       req.user!.id,
-      req.body.timeSpent
+      req.body.progress
     );
     res.json(user);
   });
