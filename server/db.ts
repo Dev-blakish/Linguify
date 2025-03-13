@@ -7,10 +7,25 @@ export async function connectDB() {
     console.log('Starting server initialization...');
     console.log('MongoDB Password present:', !!process.env.MONGODB_PASSWORD);
 
+    // Add mongoose connection event listeners
+    mongoose.connection.on('connected', () => {
+      console.log('Mongoose connected to MongoDB');
+    });
+
+    mongoose.connection.on('error', (err) => {
+      console.error('Mongoose connection error:', err);
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      console.log('Mongoose disconnected from MongoDB');
+    });
+
     // Connect to MongoDB before setting up routes
     await mongoose.connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
+      serverSelectionTimeoutMS: 10000, // Increased timeout to 10 seconds
       socketTimeoutMS: 45000, // Close sockets after 45 seconds
+      retryWrites: true,
+      w: 'majority'
     });
 
     console.log('Connected to MongoDB');
