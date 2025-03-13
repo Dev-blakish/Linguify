@@ -16,7 +16,7 @@ export function NavBar() {
           <Link href="/">
             <div className="flex items-center space-x-2 cursor-pointer">
               <img 
-                src="/attached_assets/linguify logo-Photoroom.png" 
+                src="/linguify-logo.png" 
                 alt="Linguify Logo" 
                 className="h-8 w-auto"
               />
