@@ -48,7 +48,7 @@ export default function HomePage() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="font-display">
-              Welcome back, {user?.username}!
+              {user?.lastLoginAt ? `Welcome back, ${user?.username}!` : `Welcome to Linguify, ${user?.username}!`}
             </CardTitle>
           </CardHeader>
           <CardContent>
