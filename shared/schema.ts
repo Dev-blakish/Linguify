@@ -8,7 +8,8 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   language: text("language").notNull(),
   level: text("level").notNull(),
-  timeSpent: integer("time_spent").notNull().default(0), // in minutes
+  progress: integer("progress").notNull().default(0), // Added progress field
+  lastLoginAt: timestamp("last_login_at"), // Added last login timestamp
 });
 
 export const lessons = pgTable("lessons", {
@@ -24,7 +25,6 @@ export const progress = pgTable("progress", {
   userId: integer("user_id").notNull(),
   lessonId: integer("lesson_id").notNull(),
   completed: boolean("completed").notNull().default(false),
-  timeSpent: integer("time_spent").notNull().default(0), // in minutes
 });
 
 export const chatHistory = pgTable("chat_history", {

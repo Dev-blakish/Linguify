@@ -9,7 +9,8 @@ export interface IStorage {
   getUser(id: string): Promise<any>;
   getUserByUsername(username: string): Promise<any>;
   createUser(user: InsertUser): Promise<any>;
-  updateUserTimeSpent(userId: string, timeSpent: number): Promise<any>;
+  updateUserProgress(userId: string, progress: number): Promise<any>;
+  updateUserLastLogin(userId: string): Promise<any>;
   getLesson(id: string): Promise<any>;
   getLessons(language: string, level: string): Promise<any[]>;
   createLesson(lesson: InsertLesson): Promise<any>;
@@ -42,10 +43,18 @@ export class MongoStorage implements IStorage {
     return await user.save();
   }
 
-  async updateUserTimeSpent(userId: string, timeSpent: number) {
+  async updateUserProgress(userId: string, progress: number) {
     return await User.findByIdAndUpdate(
       userId,
-      { timeSpent },
+      { progress },
+      { new: true }
+    );
+  }
+
+  async updateUserLastLogin(userId: string) {
+    return await User.findByIdAndUpdate(
+      userId,
+      { lastLoginAt: new Date() },
       { new: true }
     );
   }

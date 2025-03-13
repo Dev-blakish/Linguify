@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import type { Lesson, Progress as ProgressType } from "@shared/schema";
 import { motion } from "framer-motion";
-import { Clock, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -21,7 +21,7 @@ export default function HomePage() {
 
   const completedLessons = progress?.filter(p => p.completed).length || 0;
   const totalLessons = lessons?.length || 0;
-  const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
+  const progressPercentage = user?.progress || 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -31,10 +31,6 @@ export default function HomePage() {
             Linguify
           </h1>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              <span>Time spent: {user?.timeSpent || 0} min</span>
-            </div>
             <Link href="/practice">
               <Button variant="outline" className="gap-2">
                 <MessageSquare className="h-4 w-4" />
@@ -51,23 +47,30 @@ export default function HomePage() {
       <main className="container mx-auto px-4 py-8">
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="font-display">Your Progress</CardTitle>
+            <CardTitle className="font-display">
+              Welcome back, {user?.username}!
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progressPercentage}%` }}
-              transition={{ duration: 1, ease: "easeOut" }}
-            >
-              <Progress 
-                value={progressPercentage} 
-                className="mb-2 bg-green-100" 
-                indicatorClassName="bg-green-500 transition-all duration-500"
-              />
-            </motion.div>
-            <p className="text-sm text-muted-foreground">
-              {completedLessons} of {totalLessons} lessons completed
+            <p className="text-muted-foreground mb-6">
+              Keep practicing and you'll reach your language goals in no time!
             </p>
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">Your Progress</h3>
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercentage}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+              >
+                <Progress 
+                  value={progressPercentage} 
+                  className="mb-2" 
+                />
+              </motion.div>
+              <p className="text-sm text-muted-foreground">
+                {progressPercentage}% Complete
+              </p>
+            </div>
           </CardContent>
         </Card>
 

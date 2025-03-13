@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { apiRequest } from "@/lib/queryClient";
-import { Loader2, Send, Clock, History } from "lucide-react";
+import { Loader2, Send, History } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import type { ChatHistory } from "@shared/schema";
@@ -21,29 +21,19 @@ export default function PracticePage() {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [timeSpent, setTimeSpent] = useState(0);
+  const queryClient = useQueryClient();
 
   // Fetch chat history
   const { data: chatHistory } = useQuery<ChatHistory[]>({
     queryKey: ["/api/chat-history"],
   });
 
-  // Track time spent
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeSpent(prev => {
-        const newTime = prev + 1;
-        updateTimeSpentMutation.mutate(newTime);
-        return newTime;
-      });
-    }, 60000); // Update every minute
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const updateTimeSpentMutation = useMutation({
-    mutationFn: async (timeSpent: number) => {
-      await apiRequest("POST", "/api/time-spent", { timeSpent });
+  const updateProgressMutation = useMutation({
+    mutationFn: async (progress: number) => {
+      await apiRequest("POST", "/api/progress", { progress });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
     },
   });
 
@@ -57,6 +47,10 @@ export default function PracticePage() {
         ...prev,
         { role: "assistant", content: data.message },
       ]);
+      // Increment progress after successful chat interaction
+      if (user && user.progress < 100) {
+        updateProgressMutation.mutate(Math.min(user.progress + 5, 100));
+      }
     },
   });
 
@@ -75,10 +69,6 @@ export default function PracticePage() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold font-display">Practice Chat</h1>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              <span>Time spent: {timeSpent} min</span>
-            </div>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="outline" className="gap-2">

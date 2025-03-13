@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   language: { type: String, required: true },
   level: { type: String, required: true },
-  timeSpent: { type: Number, default: 0 },
+  progress: { type: Number, default: 0 },
+  lastLoginAt: { type: Date },
 });
 
 // Lesson Schema
@@ -57,7 +58,6 @@ const progressSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   lessonId: { type: mongoose.Schema.Types.ObjectId, ref: 'Lesson', required: true },
   completed: { type: Boolean, default: false },
-  timeSpent: { type: Number, default: 0 },
 });
 
 // Chat History Schema
