@@ -1,112 +1,86 @@
-import { users, lessons, progress, chatHistory } from "@shared/schema";
-import type { User, Lesson, Progress, ChatHistory, InsertUser, InsertLesson, InsertProgress, InsertChatHistory } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import { User, Lesson, Progress, ChatHistory } from './db';
+import type { InsertUser, InsertLesson, InsertProgress, InsertChatHistory } from "@shared/schema";
 
 const MemoryStore = createMemoryStore(session);
 
 export interface IStorage {
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUserTimeSpent(userId: number, timeSpent: number): Promise<User>;
-  getLesson(id: number): Promise<Lesson | undefined>;
-  getLessons(language: string, level: string): Promise<Lesson[]>;
-  createLesson(lesson: InsertLesson): Promise<Lesson>;
-  getProgress(userId: number): Promise<Progress[]>;
-  updateProgress(progress: InsertProgress): Promise<Progress>;
-  getChatHistory(userId: number): Promise<ChatHistory[]>;
-  saveChatHistory(chat: InsertChatHistory): Promise<ChatHistory>;
+  getUser(id: string): Promise<any>;
+  getUserByUsername(username: string): Promise<any>;
+  createUser(user: InsertUser): Promise<any>;
+  updateUserTimeSpent(userId: string, timeSpent: number): Promise<any>;
+  getLesson(id: string): Promise<any>;
+  getLessons(language: string, level: string): Promise<any[]>;
+  createLesson(lesson: InsertLesson): Promise<any>;
+  getProgress(userId: string): Promise<any[]>;
+  updateProgress(progress: InsertProgress): Promise<any>;
+  getChatHistory(userId: string): Promise<any[]>;
+  saveChatHistory(chat: InsertChatHistory): Promise<any>;
   sessionStore: session.SessionStore;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private lessons: Map<number, Lesson>;
-  private progresses: Map<number, Progress>;
-  private chats: Map<number, ChatHistory>;
+export class MongoStorage implements IStorage {
   sessionStore: session.SessionStore;
-  currentId: { users: number; lessons: number; progress: number; chats: number };
 
   constructor() {
-    this.users = new Map();
-    this.lessons = new Map();
-    this.progresses = new Map();
-    this.chats = new Map();
-    this.currentId = { users: 1, lessons: 1, progress: 1, chats: 1 };
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000,
     });
   }
 
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+  async getUser(id: string) {
+    return await User.findById(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username
+  async getUserByUsername(username: string) {
+    return await User.findOne({ username });
+  }
+
+  async createUser(insertUser: InsertUser) {
+    const user = new User(insertUser);
+    return await user.save();
+  }
+
+  async updateUserTimeSpent(userId: string, timeSpent: number) {
+    return await User.findByIdAndUpdate(
+      userId,
+      { timeSpent },
+      { new: true }
     );
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId.users++;
-    const user = { ...insertUser, id, timeSpent: 0 };
-    this.users.set(id, user);
-    return user;
+  async getLesson(id: string) {
+    return await Lesson.findById(id);
   }
 
-  async updateUserTimeSpent(userId: number, timeSpent: number): Promise<User> {
-    const user = await this.getUser(userId);
-    if (!user) throw new Error("User not found");
-
-    const updatedUser = { ...user, timeSpent };
-    this.users.set(userId, updatedUser);
-    return updatedUser;
+  async getLessons(language: string, level: string) {
+    return await Lesson.find({ language, level });
   }
 
-  async getLesson(id: number): Promise<Lesson | undefined> {
-    return this.lessons.get(id);
+  async createLesson(insertLesson: InsertLesson) {
+    const lesson = new Lesson(insertLesson);
+    return await lesson.save();
   }
 
-  async getLessons(language: string, level: string): Promise<Lesson[]> {
-    return Array.from(this.lessons.values()).filter(
-      (lesson) => lesson.language === language && lesson.level === level
-    );
+  async getProgress(userId: string) {
+    return await Progress.find({ userId });
   }
 
-  async createLesson(insertLesson: InsertLesson): Promise<Lesson> {
-    const id = this.currentId.lessons++;
-    const lesson = { ...insertLesson, id };
-    this.lessons.set(id, lesson);
-    return lesson;
+  async updateProgress(insertProgress: InsertProgress) {
+    const progress = new Progress(insertProgress);
+    return await progress.save();
   }
 
-  async getProgress(userId: number): Promise<Progress[]> {
-    return Array.from(this.progresses.values()).filter(
-      (progress) => progress.userId === userId
-    );
+  async getChatHistory(userId: string) {
+    return await ChatHistory.find({ userId })
+      .sort({ createdAt: -1 });
   }
 
-  async updateProgress(insertProgress: InsertProgress): Promise<Progress> {
-    const id = this.currentId.progress++;
-    const progress = { ...insertProgress, id, timeSpent: 0 };
-    this.progresses.set(id, progress);
-    return progress;
-  }
-
-  async getChatHistory(userId: number): Promise<ChatHistory[]> {
-    return Array.from(this.chats.values())
-      .filter(chat => chat.userId === userId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  }
-
-  async saveChatHistory(insertChat: InsertChatHistory): Promise<ChatHistory> {
-    const id = this.currentId.chats++;
-    const chat = { ...insertChat, id, createdAt: new Date() };
-    this.chats.set(id, chat);
-    return chat;
+  async saveChatHistory(insertChat: InsertChatHistory) {
+    const chat = new ChatHistory(insertChat);
+    return await chat.save();
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new MongoStorage();
