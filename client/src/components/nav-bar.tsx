@@ -44,7 +44,24 @@ export function NavBar() {
                   </p>
                 </HoverCardContent>
               </HoverCard>
-              <DropdownMenuItem>How It Works</DropdownMenuItem>
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <DropdownMenuItem>How It Works</DropdownMenuItem>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80 bg-purple-50 border border-purple-200">
+                  <p className="text-sm text-purple-900">
+                    How Linguify Works:
+                    <br/><br/>
+                    1. Sign-up: Users create an account and set their language learning goals.
+                    <br/>
+                    2. Chatbot Practice: Users practice conversing with our AI-powered chatbot, which responds to their inputs and helps them improve their language skills.
+                    <br/>
+                    3. Users can always view chat history
+                    <br/>
+                    4. Progress Bar: A progress bar shows users how far they've come, motivating them to continue learning.
+                  </p>
+                </HoverCardContent>
+              </HoverCard>
               <DropdownMenuItem>Contact</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
