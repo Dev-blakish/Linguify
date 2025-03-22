@@ -4,6 +4,9 @@ import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { generateChatResponse } from "./openai";
 import { insertLessonSchema } from "@shared/schema";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);

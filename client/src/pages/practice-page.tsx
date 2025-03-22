@@ -113,7 +113,7 @@ export default function PracticePage() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <Card className="h-[600px] flex flex-col">
+        <Card className="h-[480px] flex flex-col">
           <CardContent className="flex-1 p-4">
             <ScrollArea className="h-full">
               <div className="space-y-4">

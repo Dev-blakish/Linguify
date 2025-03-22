@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-const MONGODB_URI = `mongodb+srv://blakish:${process.env.MONGODB_PASSWORD}@cluster0.zuhbx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+dotenv.config();
+
+const MONGODB_URI = process.env.MONGODB_URI || `mongodb+srv://linguify:${process.env.MONGODB_PASSWORD}@cluster0.ctnhj.mongodb.net/?retryWrites=true&w=majority`;
 
 export async function connectDB() {
   try {

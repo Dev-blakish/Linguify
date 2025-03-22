@@ -38,7 +38,7 @@ export function NavBar() {
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80 bg-purple-50 border border-purple-200">
                   <p className="text-sm text-purple-900">
-                    At Linguify, we believe that language learning should be a rewarding and enjoyable experience. That's why we're committed to providing a supportive and motivating environment with AI that helps our users stay on track and reach their full potential.
+                    At Linguify, we believe that language learning should be an enjoyable experience. That's why we're committed to providing a supportive and motivating environment with AI that helps our users stay on track and reach their full potential.
                     <br/><br/>
                     Join our community today and start linguifying your world!
                   </p>
@@ -52,7 +52,7 @@ export function NavBar() {
                   <p className="text-sm text-purple-900">
                     How Linguify Works:
                     <br/><br/>
-                    1. Sign-up: Users create an account and set their language learning goals.
+                    1. Sign-up: Users create an account and set the language they want to learn.
                     <br/>
                     2. Chatbot Practice: Users practice conversing with our AI-powered chatbot, which responds to their inputs and helps them improve their language skills.
                     <br/>
