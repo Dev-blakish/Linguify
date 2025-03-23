@@ -14,7 +14,7 @@
   ],
   "functions": {
     "server/index.ts": {
-      "includeFiles": ["server/routes.ts", "server/storage.ts", "server/auth.ts", "server/openai.ts"]
+    "includeFiles": "server/**/*"  
     }
   }
 }
