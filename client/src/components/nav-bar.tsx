@@ -19,7 +19,7 @@ export function NavBar() {
               <img 
                 src="/linguify-logo.png" 
                 alt="Linguify Logo" 
-                className="h-12 w-auto transition-transform duration-300 hover:scale-105"
+                className="h-12 w-auto transition-transform duration-300 hover:scale-125"
               />
             </div>
           </Link>
